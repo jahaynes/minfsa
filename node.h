@@ -29,8 +29,8 @@ typedef unsigned long Node;
 
 /* Node: Getters and Setters */
 
-const char getChar (const Node* node);
-void setChar (Node* node, const char c);
+const unsigned char getChar (const Node* node);
+void setChar (Node* node, const unsigned char c);
 
 const unsigned long getOut (const Node* node);
 void setOut (Node* node, const unsigned long out);

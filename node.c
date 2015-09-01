@@ -11,11 +11,11 @@
  *.  . C*   8 Bits  (Char bits)
  *******/
 
-const char getChar (const Node* node) {
+const unsigned char getChar (const Node* node) {
     return (char) (*node & CHAR_BITS);
 }
 
-void setChar (Node* node, const char c) {
+void setChar (Node* node, const unsigned char c) {
     (*node) |= c;
 }
 

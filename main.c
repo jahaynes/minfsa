@@ -1,14 +1,21 @@
 #include "node.h"
 #include "automaton.h"
 #include <stdio.h>
+#include <string.h>
 
 int main (int argc, char** argv) {
 
     struct Automaton* a = newAutomaton ();
 
-    insertWord (a, "hello", a->originId);         
-    insertWord (a, "hi", a->originId);
-    insertWord (a, "how are you", a->originId);
+    char *line = NULL;
+    size_t size = 0;
+    while (getline(&line, &size, stdin) != -1) {
+        int len = strlen(line);
+        if (len > 1) {
+            line[len-1] = 0;
+            insertWord (a, line, a->originId);
+        }
+    }
 
     dumpValues (a);
 
