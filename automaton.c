@@ -33,11 +33,11 @@ Node* getNode (const struct Automaton *a, const unsigned long nodeId) {
     return &(a->nodes[nodeId]);
 }
 
-void insertWord (struct Automaton* a, const char* str, const unsigned long nodeId) {
+void insertWord (struct Automaton* a, const char* str) {
 
     int ci = 0;
     char c = str[ci++];
-    Node *node = getNode (a, nodeId);
+    Node *node = getNode (a, a->originId);
 
     while ( c ) {
 

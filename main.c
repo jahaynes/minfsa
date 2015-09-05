@@ -13,7 +13,7 @@ int main (int argc, char** argv) {
         int len = strlen(line);
         if (len > 1) {
             line[len-1] = 0;
-            insertWord (a, line, a->originId);
+            insertWord (a, line);
         }
     }
 
