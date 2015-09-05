@@ -6,7 +6,7 @@
 struct Automaton* newAutomaton (void) {
 
     // Initialise an automaton with space for 100 nodes
-    int maxNodes = 100;
+    int maxNodes = 1024 * 1024;
    
     struct Automaton *new = calloc (1, sizeof (struct Automaton));
     new->nodes = calloc (maxNodes, sizeof (Node));

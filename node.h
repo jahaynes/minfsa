@@ -16,6 +16,7 @@
 #define LO_EIGHT_BITS ((1UL << 8) - 1UL)
 #define LO_THIRTYTWO_BITS ((1UL << 32) - 1UL)
 #define LO_FIFTYSIX_BITS ((1UL << 56) - 1UL)
+#define SIXTY_FOUR_BITS (-1UL)
 
 #define CHAR_BITS LO_EIGHT_BITS
 #define OUT_BITS (LO_THIRTYTWO_BITS - LO_EIGHT_BITS)
@@ -29,8 +30,8 @@ typedef unsigned long Node;
 
 /* Node: Getters and Setters */
 
-const unsigned char getChar (const Node* node);
-void setChar (Node* node, const unsigned char c);
+const char getChar (const Node* node);
+void setChar (Node* node, const char c);
 
 const unsigned long getOut (const Node* node);
 void setOut (Node* node, const unsigned long out);
