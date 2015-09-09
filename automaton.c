@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct Automaton* newAutomaton (void) {
 
@@ -33,10 +34,36 @@ Node* getNode (const struct Automaton *a, const unsigned long nodeId) {
     return &(a->nodes[nodeId]);
 }
 
+void insertWordIntoAutomatonKeepNodeIds
+    (struct Automaton* a, const char* str, unsigned long *nodeIds);
+
 void insertWord (struct Automaton* a, const char* str) {
 
+    /* Allocate space for nodeIds
+     * +1 for 0-terminated
+     * +1 because one more node than letter */
+    int numNodeIds = 2 + strlen(str);
+    unsigned long *nodeIds = calloc (numNodeIds, sizeof(unsigned long));
+
+    insertWordIntoAutomatonKeepNodeIds (a, str, nodeIds);
+
+    int i;
+    for(i=0;i<numNodeIds;i++) {
+        printf("%ld ", nodeIds[i]);
+    }
+    printf("\n");
+
+    free (nodeIds);
+
+}
+
+void insertWordIntoAutomatonKeepNodeIds
+    (struct Automaton* a, const char* str, unsigned long *nodeIds) {
+
+    int ni = 0;
     int ci = 0;
     char c = str[ci++];
+    nodeIds[ni++] = a->originId;
     Node *node = getNode (a, a->originId);
 
     while ( c ) {
@@ -45,7 +72,9 @@ void insertWord (struct Automaton* a, const char* str) {
         if ( getChar (node) == c ) {
             // Advance to the next one
             c = str[ci++];
-            node = getNode (a, getOut (node));
+            unsigned long outNodeId = getOut (node);
+            nodeIds[ni++] = outNodeId;
+            node = getNode (a, outNodeId);
             continue;
         }
 
@@ -67,6 +96,7 @@ void insertWord (struct Automaton* a, const char* str) {
 
             //We've made a new node and connected it to out
             c = str[ci++];
+            nodeIds[ni++] = destId;
             node = getNode (a, destId);
 
             continue;
@@ -97,6 +127,7 @@ void insertWord (struct Automaton* a, const char* str) {
         //Then move to the dest, and char
         node = getNode (a, destId);
         c = str[ci++];
+        nodeIds[ni++] = destId;
     }
 
     // Since we hit the end of the string,
