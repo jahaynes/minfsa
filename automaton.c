@@ -47,9 +47,12 @@ void insertWord (struct Automaton* a, const char* str) {
 
     insertWordIntoAutomatonKeepNodeIds (a, str, nodeIds);
 
-    int i;
-    for(i=0;i<numNodeIds;i++) {
-        printf("%ld ", nodeIds[i]);
+    printf("%s:\t", str);
+    
+    unsigned long *ni = nodeIds;
+    while (*ni) {
+        printf("%ld ", *ni);
+        ni++;
     }
     printf("\n");
 
