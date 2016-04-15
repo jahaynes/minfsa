@@ -16,7 +16,7 @@ unsigned long newNode (struct Automaton *a);
 
 Node* getNode (const struct Automaton *a, const unsigned long nodeId);
 
-void insertWord (struct Automaton* a, const char* str);
+void insertWord (struct Automaton* a, const uint8_t* str);
 
 void deleteAutomaton(struct Automaton *a);
 
