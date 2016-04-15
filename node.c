@@ -11,13 +11,13 @@
  *.  . C*   8 Bits  (Char bits)
  *******/
 
-const char getChar (const Node* node) {
-    return (char) (*node & CHAR_BITS);
+const uint8_t getChar (const Node* node) {
+    return (uint8_t) (*node & CHAR_BITS);
 }
 
-void setChar (Node* node, const char c) {
+void setChar (Node* node, const uint8_t c) {
     *node &= (SIXTY_FOUR_BITS - CHAR_BITS);
-    *node |= (unsigned long)(unsigned char)c;
+    *node |= (unsigned long)c;
 }
 
 const unsigned long getOut (const Node* node) {

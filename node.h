@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 /********
  *M .  .*   
@@ -30,8 +31,8 @@ typedef unsigned long Node;
 
 /* Node: Getters and Setters */
 
-const char getChar (const Node* node);
-void setChar (Node* node, const char c);
+const uint8_t getChar (const Node* node);
+void setChar (Node* node, const uint8_t c);
 
 const unsigned long getOut (const Node* node);
 void setOut (Node* node, const unsigned long out);

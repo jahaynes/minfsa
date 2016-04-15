@@ -33,10 +33,10 @@ Node* getNode (const struct Automaton *a, const unsigned long nodeId) {
     return &(a->nodes[nodeId]);
 }
 
-void insertWord (struct Automaton* a, const char* str) {
+void insertWord (struct Automaton* a, const uint8_t* str) {
 
     int ci = 0;
-    char c = str[ci++];
+    uint8_t c = str[ci++];
     Node *node = getNode (a, a->originId);
 
     while ( c ) {
@@ -72,7 +72,7 @@ void insertWord (struct Automaton* a, const char* str) {
             continue;
         }
 
-        // This node didn't have the correct char
+        // This node didn't have the correct uint8_t
         // Maybe its sibling will
         unsigned long siblingId = getSibling (node);
         if ( siblingId ) {
@@ -118,7 +118,7 @@ void deleteAutomaton(struct Automaton *a) {
 
 /* Debug/printing methods */
 
-void dumpValues_ (const struct Automaton *a, const Node* node, char *buf, int bufHi) {
+void dumpValues_ (const struct Automaton *a, const Node* node, uint8_t *buf, int bufHi) {
 
     buf[bufHi] = getChar(node);
 
@@ -145,7 +145,7 @@ void dumpValues_ (const struct Automaton *a, const Node* node, char *buf, int bu
 }
 
 void dumpValues (const struct Automaton *a) {
-    char buf[256];
+    uint8_t buf[256];
     Node *node = getNode (a, a->originId); 
     dumpValues_ (a, node, buf, 0);
 }
@@ -154,10 +154,10 @@ void dumpNode (int nodeId, Node *n) {
     
     unsigned long siblingId = getSibling (n);
     unsigned long outId = getOut (n);
-    char c = getChar (n);
+    uint8_t c = getChar (n);
     
-    char terminal = isTerminal (n) ? 'T' : ' ';
-    char confluence = isConfluence (n) ? 'C' : ' ';
+    uint8_t terminal = isTerminal (n) ? 'T' : ' ';
+    uint8_t confluence = isConfluence (n) ? 'C' : ' ';
     
     printf("%d: [ %c%c | S %lu | O %lu | %c ]\n", nodeId, terminal, confluence, siblingId, outId, c);
 }
