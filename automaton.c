@@ -1,5 +1,6 @@
 #include "automaton.h"
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -33,11 +34,86 @@ Node* getNode (const struct Automaton *a, const unsigned long nodeId) {
     return &(a->nodes[nodeId]);
 }
 
-void insertWord (struct Automaton* a, const char* str, const unsigned long nodeId) {
+bool insertIntoAutomaton (struct Automaton* a, const char* str);
+
+void fillNodeIdString (const struct Automaton* a, const char* str, unsigned long* nodeId);
+
+bool insertWord (struct Automaton* a, const char* str) {
+    
+    bool inserted = insertIntoAutomaton(a, str);
+
+    if (inserted) {
+        int strLen = strlen(str);
+        printf ("len %d\n", strLen);
+        unsigned long* nodeIds = calloc ( strlen(str) + 2, sizeof(unsigned long) ); //one for the terminal node, one for the \0
+        fillNodeIdString (a, str, nodeIds);
+        reduce (&(a->eqClass), nodeIds);
+        free (nodeIds);       
+    }
+    
+    return inserted;
+    
+}
+
+void fillNodeIdString (const struct Automaton* a, const char* str, unsigned long* nodeIds) {
+    
+    int nii = 0;
+    
+    char* c;
+    
+    unsigned long nodeId = a->originId;
+    Node *node = getNode (a, nodeId);
+
+    for( c = (char*)str; *c; ) {
+
+        // Check main spine
+        if ( getChar (node) == *c) {
+
+            if (nodeId > 100) {
+                printf("Too big!\n");
+                exit(1);
+            }
+
+            nodeIds[nii++] = nodeId;
+            nodeId = getOut (node);
+            node = getNode (a, nodeId);
+            c++;
+            continue;
+        }
+        
+        // Otherwise check siblings
+        nodeId = getSibling (node);
+        
+        if (nodeId > 100) {
+            printf("Too big!\n");
+            exit(1);
+        }
+        
+        if (nodeId) {
+            node = getNode (a, nodeId);
+            continue;
+        }
+
+        printf("Couldn't find expected word %s\n", str);
+        dumpStructure (a);
+        exit(1);
+
+    }
+
+    //Add the terminal node id to the end
+    nodeIds[nii] = nodeId;
+
+    printf("\n");
+    
+}
+
+bool insertIntoAutomaton (struct Automaton* a, const char* str) {
+
+    bool modified = false;
 
     int ci = 0;
     char c = str[ci++];
-    Node *node = getNode (a, nodeId);
+    Node *node = getNode (a, a->originId);
 
     while ( c ) {
 
@@ -53,14 +129,6 @@ void insertWord (struct Automaton* a, const char* str, const unsigned long nodeI
         // We can just create a new one here
         if ( getOut (node) == 0UL ) {
 
-            // However if we made a new one here
-            // and it was terminal, we must also
-            // make it confluence? Unsure if necessary
-            /* TODO
-            if ( isTerminal (node) ) {
-                setConfluence (node);
-            } */
-
             setChar (node, c);
             unsigned long destId = newNode (a);
             setOut (node, destId);
@@ -69,6 +137,7 @@ void insertWord (struct Automaton* a, const char* str, const unsigned long nodeI
             c = str[ci++];
             node = getNode (a, destId);
 
+            modified = true;
             continue;
         }
 
@@ -97,18 +166,26 @@ void insertWord (struct Automaton* a, const char* str, const unsigned long nodeI
         //Then move to the dest, and char
         node = getNode (a, destId);
         c = str[ci++];
+        modified = true;
     }
 
-    // Since we hit the end of the string,
-    // we should make this terminal.
-    setTerminal (node);
+    if (modified) { //Only 
 
-    // However, if it has an out or sibling
-    // It should probably be confluence too!
-    if ( getSibling (node) || getOut (node) ) {
-        setConfluence (node);
+        // Since we hit the end of the string,
+        // we should make this terminal.
+        setTerminal (node);
+
+        // However, if it has an out or sibling
+        // It should probably be confluence too!
+
+        //TODO -> is it possible we set a sibling as c/t/ but should have set it upstream?
+
+        if ( getSibling (node) || getOut (node) ) {
+            setConfluence (node);
+        }
     }
 
+    return modified;
 }
 
 void deleteAutomaton(struct Automaton *a) {
