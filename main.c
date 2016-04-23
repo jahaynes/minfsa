@@ -11,7 +11,10 @@ int main (int argc, char** argv) {
         uint8_t word[256] = {0};
 
         if (fscanf(stdin, "%255s", word)) {
-            insertWord (a, word);
+            if ( insertWord (a, word) ) {
+                printf("Could not insert word: %s\n", word); 
+                break;
+            }
         }
 
         if (feof(stdin)) {

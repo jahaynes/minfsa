@@ -2,6 +2,7 @@
 #define AUTOMATON_H
 
 #include "node.h"
+#include "shared.h"
 
 struct Automaton {
     int maxNodes;
@@ -12,11 +13,11 @@ struct Automaton {
 
 struct Automaton* newAutomaton (void);
 
-unsigned long newNode (struct Automaton *a);
+Success newNode (Node *newNode, struct Automaton *a);
 
 Node* getNode (const struct Automaton *a, const unsigned long nodeId);
 
-void insertWord (struct Automaton* a, const uint8_t* str);
+Success insertWord (struct Automaton* a, const uint8_t* str);
 
 void deleteAutomaton(struct Automaton *a);
 
