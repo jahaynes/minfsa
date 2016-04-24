@@ -17,24 +17,30 @@ struct Automaton* newAutomaton (void) {
     new->nextFree = 1;
 
     // The next node is the origin
-    unsigned long originId = newNode (new);
-    new->originId = originId;
+    newNode (&(new->originId), new);
 
     return new;
 }
 
-unsigned long newNode (struct Automaton *a) {
-    unsigned long nextId = a->nextFree++;
-    a->nodes[nextId] = 0UL;
-    return nextId;
+NewNodeResult newNode (Node *newNode, struct Automaton *a) {
+    unsigned long nextId = a->nextFree;
+    if (nextId < a->maxNodes) {
+        a->nextFree++;
+        a->nodes[nextId] = 0UL;
+        *newNode = nextId;
+        return NODE_ADDED;
+    } else {
+        return NEWNODE_FAIL;
+    }
 }
 
 Node* getNode (const struct Automaton *a, const unsigned long nodeId) {
     return &(a->nodes[nodeId]);
 }
 
-void insertWord (struct Automaton* a, const uint8_t* str) {
+AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
 
+    int ro = 1;
     int ci = 0;
     uint8_t c = str[ci++];
     Node *node = getNode (a, a->originId);
@@ -52,7 +58,7 @@ void insertWord (struct Automaton* a, const uint8_t* str) {
         // If our outNode is blank
         // We can just create a new one here
         if ( getOut (node) == 0UL ) {
-
+            ro = 0;
             // However if we made a new one here
             // and it was terminal, we must also
             // make it confluence? Unsure if necessary
@@ -62,7 +68,10 @@ void insertWord (struct Automaton* a, const uint8_t* str) {
             } */
 
             setChar (node, c);
-            unsigned long destId = newNode (a);
+            unsigned long destId = 0UL;
+            if ( newNode (&destId, a) == NEWNODE_FAIL ) {
+                return ADD_FAIL;    
+            }
             setOut (node, destId);
 
             //We've made a new node and connected it to out
@@ -80,12 +89,18 @@ void insertWord (struct Automaton* a, const uint8_t* str) {
             continue;
         }
         
+        ro = 0;
         // Otherwise we gotta make a sibling now
-        siblingId = newNode (a);
+        if ( newNode (&siblingId, a) == NEWNODE_FAIL ) {
+            return ADD_FAIL;
+        }
         Node *sibling = getNode (a, siblingId);
         
         // And a new place for it to point
-        unsigned long destId = newNode (a);
+        unsigned long destId = 0UL;
+        if ( newNode (&destId, a) == NEWNODE_FAIL ) {
+            return ADD_FAIL;
+        }
         
         //Link em up
         setChar (sibling, c);
@@ -99,6 +114,11 @@ void insertWord (struct Automaton* a, const uint8_t* str) {
         c = str[ci++];
     }
 
+
+    if (ro) {
+        return NOT_ADDED;
+    }
+
     // Since we hit the end of the string,
     // we should make this terminal.
     setTerminal (node);
@@ -109,6 +129,7 @@ void insertWord (struct Automaton* a, const uint8_t* str) {
         setConfluence (node);
     }
 
+    return WORD_ADDED;
 }
 
 void deleteAutomaton(struct Automaton *a) {
