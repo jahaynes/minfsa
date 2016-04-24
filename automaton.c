@@ -22,15 +22,15 @@ struct Automaton* newAutomaton (void) {
     return new;
 }
 
-Success newNode (Node *newNode, struct Automaton *a) {
+NewNodeResult newNode (Node *newNode, struct Automaton *a) {
     unsigned long nextId = a->nextFree;
     if (nextId < a->maxNodes) {
         a->nextFree++;
         a->nodes[nextId] = 0UL;
         *newNode = nextId;
-        return SUCCESS;
+        return NODE_ADDED;
     } else {
-        return FAILURE;
+        return NEWNODE_FAIL;
     }
 }
 
@@ -38,8 +38,9 @@ Node* getNode (const struct Automaton *a, const unsigned long nodeId) {
     return &(a->nodes[nodeId]);
 }
 
-Success insertWord (struct Automaton* a, const uint8_t* str) {
+AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
 
+    int ro = 1;
     int ci = 0;
     uint8_t c = str[ci++];
     Node *node = getNode (a, a->originId);
@@ -57,7 +58,7 @@ Success insertWord (struct Automaton* a, const uint8_t* str) {
         // If our outNode is blank
         // We can just create a new one here
         if ( getOut (node) == 0UL ) {
-
+            ro = 0;
             // However if we made a new one here
             // and it was terminal, we must also
             // make it confluence? Unsure if necessary
@@ -68,8 +69,8 @@ Success insertWord (struct Automaton* a, const uint8_t* str) {
 
             setChar (node, c);
             unsigned long destId = 0UL;
-            if ( newNode (&destId, a) ) {
-                return FAILURE;    
+            if ( newNode (&destId, a) == NEWNODE_FAIL ) {
+                return ADD_FAIL;    
             }
             setOut (node, destId);
 
@@ -88,16 +89,17 @@ Success insertWord (struct Automaton* a, const uint8_t* str) {
             continue;
         }
         
+        ro = 0;
         // Otherwise we gotta make a sibling now
-        if ( newNode (&siblingId, a) ) {
-            return FAILURE;
+        if ( newNode (&siblingId, a) == NEWNODE_FAIL ) {
+            return ADD_FAIL;
         }
         Node *sibling = getNode (a, siblingId);
         
         // And a new place for it to point
         unsigned long destId = 0UL;
-        if ( newNode (&destId, a) ) {
-            return FAILURE;
+        if ( newNode (&destId, a) == NEWNODE_FAIL ) {
+            return ADD_FAIL;
         }
         
         //Link em up
@@ -112,6 +114,11 @@ Success insertWord (struct Automaton* a, const uint8_t* str) {
         c = str[ci++];
     }
 
+
+    if (ro) {
+        return NOT_ADDED;
+    }
+
     // Since we hit the end of the string,
     // we should make this terminal.
     setTerminal (node);
@@ -122,7 +129,7 @@ Success insertWord (struct Automaton* a, const uint8_t* str) {
         setConfluence (node);
     }
 
-    return SUCCESS;
+    return WORD_ADDED;
 }
 
 void deleteAutomaton(struct Automaton *a) {

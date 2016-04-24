@@ -2,7 +2,6 @@
 #define AUTOMATON_H
 
 #include "node.h"
-#include "shared.h"
 
 struct Automaton {
     int maxNodes;
@@ -11,13 +10,17 @@ struct Automaton {
     unsigned long originId;
 };
 
+typedef enum { ADD_FAIL, WORD_ADDED, NOT_ADDED } AddWordResult;
+
+typedef enum { NEWNODE_FAIL, NODE_ADDED } NewNodeResult;
+
 struct Automaton* newAutomaton (void);
 
-Success newNode (Node *newNode, struct Automaton *a);
+NewNodeResult newNode (Node *newNode, struct Automaton *a);
 
 Node* getNode (const struct Automaton *a, const unsigned long nodeId);
 
-Success insertWord (struct Automaton* a, const uint8_t* str);
+AddWordResult insertWord (struct Automaton* a, const uint8_t* str);
 
 void deleteAutomaton(struct Automaton *a);
 
