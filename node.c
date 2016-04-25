@@ -46,7 +46,7 @@ void setSibling (Node* node, const unsigned long sibling) {
     //Check for overflow
     unsigned long storedSibling = (sibling << 32) & SIBLING_BITS;
     if (storedSibling >> 32 != sibling) {
-        printf("Overflow trying to store 'sibling' %lu in 24 bits!\n", out);
+        printf("Overflow trying to store 'sibling' %lu in 24 bits!\n", sibling);
         exit(1);
     }
 
