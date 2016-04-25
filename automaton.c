@@ -25,7 +25,7 @@ NewNodeResult newNode (Node *newNode, struct Automaton *a) {
     NodeIdx nextId = a->nextFree;
     if (nextId < a->maxNodes) {
         a->nextFree++;
-        a->nodes[nextId] = 0UL;
+        a->nodes[nextId] = 0;
         *newNode = nextId;
         return NODE_ADDED;
     } else {
@@ -56,7 +56,7 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
 
         // If our outNode is blank
         // We can just create a new one here
-        if ( getOut (node) == 0U ) {
+        if ( getOut (node) == 0 ) {
             ro = 0;
             // However if we made a new one here
             // and it was terminal, we must also
@@ -67,7 +67,7 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
             } */
 
             setChar (node, c);
-            NodeIdx destId = 0U;
+            NodeIdx destId = 0;
             if ( newNode (&destId, a) == NEWNODE_FAIL ) {
                 return ADD_FAIL;    
             }

@@ -14,17 +14,17 @@
  *******/
 
 /* Bit definitions */
-#define LO_EIGHT_BITS ((1UL << 8) - 1UL)
-#define LO_THIRTYTWO_BITS ((1UL << 32) - 1UL)
-#define LO_FIFTYSIX_BITS ((1UL << 56) - 1UL)
-#define SIXTY_FOUR_BITS (-1UL)
+#define LO_EIGHT_BITS ((UINT64_C(1) << 8) - UINT64_C(1))
+#define LO_THIRTYTWO_BITS ((UINT64_C(1) << 32) - UINT64_C(1))
+#define LO_FIFTYSIX_BITS ((UINT64_C(1) << 56) - UINT64_C(1))
+#define SIXTY_FOUR_BITS (UINT64_C(-1))
 
 #define CHAR_BITS LO_EIGHT_BITS
 #define OUT_BITS (LO_THIRTYTWO_BITS - LO_EIGHT_BITS)
 #define SIBLING_BITS (LO_FIFTYSIX_BITS - LO_THIRTYTWO_BITS)
 
-#define TERMINAL_BIT (1UL << 63)
-#define CONFLUENCE_BIT (1UL << 62)
+#define TERMINAL_BIT (UINT64_C(1) << 63)
+#define CONFLUENCE_BIT (UINT64_C(1) << 62)
 
 /* Node: Data-type */
 typedef uint64_t Node;
