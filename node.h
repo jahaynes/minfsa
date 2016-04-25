@@ -27,18 +27,22 @@
 #define CONFLUENCE_BIT (1UL << 62)
 
 /* Node: Data-type */
-typedef unsigned long Node;
+typedef uint64_t Node;
+
+/* 32 bit might be better here,
+ * but we need to use these as pointers */
+typedef uint64_t NodeIdx;
 
 /* Node: Getters and Setters */
 
 const uint8_t getChar (const Node* node);
 void setChar (Node* node, const uint8_t c);
 
-const unsigned long getOut (const Node* node);
-void setOut (Node* node, const unsigned long out);
+const NodeIdx getOut (const Node* node);
+void setOut (Node* node, const NodeIdx out);
 
-const unsigned long getSibling (const Node* node);
-void setSibling (Node* node, const unsigned long sibling);
+const NodeIdx getSibling (const Node* node);
+void setSibling (Node* node, const NodeIdx sibling);
 
 bool isTerminal(const Node* node);
 void setTerminal(Node* node);
