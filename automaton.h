@@ -4,10 +4,10 @@
 #include "node.h"
 
 struct Automaton {
-    int maxNodes;
-    unsigned long nextFree;
+    NodeIdx maxNodes;
+    NodeIdx nextFree;
     Node *nodes;
-    unsigned long originId;
+    NodeIdx originId;
 };
 
 typedef enum { ADD_FAIL, WORD_ADDED, NOT_ADDED } AddWordResult;
@@ -18,7 +18,7 @@ struct Automaton* newAutomaton (void);
 
 NewNodeResult newNode (Node *newNode, struct Automaton *a);
 
-Node* getNode (const struct Automaton *a, const unsigned long nodeId);
+Node* getNode (const struct Automaton *a, const NodeIdx nodeId);
 
 AddWordResult insertWord (struct Automaton* a, const uint8_t* str);
 

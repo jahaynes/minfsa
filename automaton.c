@@ -5,8 +5,7 @@
 
 struct Automaton* newAutomaton (void) {
 
-    // Initialise an automaton with space for 100 nodes
-    int maxNodes = 1024 * 1024;
+    NodeIdx maxNodes = 1024 * 1024;
    
     struct Automaton *new = calloc (1, sizeof (struct Automaton));
     new->nodes = calloc (maxNodes, sizeof (Node));
@@ -23,7 +22,7 @@ struct Automaton* newAutomaton (void) {
 }
 
 NewNodeResult newNode (Node *newNode, struct Automaton *a) {
-    unsigned long nextId = a->nextFree;
+    NodeIdx nextId = a->nextFree;
     if (nextId < a->maxNodes) {
         a->nextFree++;
         a->nodes[nextId] = 0UL;
@@ -34,7 +33,7 @@ NewNodeResult newNode (Node *newNode, struct Automaton *a) {
     }
 }
 
-Node* getNode (const struct Automaton *a, const unsigned long nodeId) {
+Node* getNode (const struct Automaton *a, const NodeIdx nodeId) {
     return &(a->nodes[nodeId]);
 }
 
@@ -57,7 +56,7 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
 
         // If our outNode is blank
         // We can just create a new one here
-        if ( getOut (node) == 0UL ) {
+        if ( getOut (node) == 0U ) {
             ro = 0;
             // However if we made a new one here
             // and it was terminal, we must also
@@ -68,7 +67,7 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
             } */
 
             setChar (node, c);
-            unsigned long destId = 0UL;
+            NodeIdx destId = 0U;
             if ( newNode (&destId, a) == NEWNODE_FAIL ) {
                 return ADD_FAIL;    
             }
@@ -83,7 +82,7 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
 
         // This node didn't have the correct uint8_t
         // Maybe its sibling will
-        unsigned long siblingId = getSibling (node);
+        NodeIdx siblingId = getSibling (node);
         if ( siblingId ) {
             node = getNode (a, siblingId);
             continue;
@@ -97,7 +96,7 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
         Node *sibling = getNode (a, siblingId);
         
         // And a new place for it to point
-        unsigned long destId = 0UL;
+        NodeIdx destId = 0U;
         if ( newNode (&destId, a) == NEWNODE_FAIL ) {
             return ADD_FAIL;
         }
@@ -152,13 +151,13 @@ void dumpValues_ (const struct Automaton *a, const Node* node, uint8_t *buf, int
     }
     
     //Follow the out-spine
-    unsigned long outNodeId = getOut(node);
+    NodeIdx outNodeId = getOut(node);
     if (outNodeId) {
         dumpValues_(a, getNode (a, outNodeId), buf, bufHi+1);
     }
     
     //Follow the sibling-spine
-    unsigned long siblingId = getSibling(node);
+    NodeIdx siblingId = getSibling(node);
     if (siblingId) {
         dumpValues_(a, getNode (a, siblingId), buf, bufHi);
     }
@@ -173,8 +172,8 @@ void dumpValues (const struct Automaton *a) {
 
 void dumpNode (int nodeId, Node *n) {
     
-    unsigned long siblingId = getSibling (n);
-    unsigned long outId = getOut (n);
+    NodeIdx siblingId = getSibling (n);
+    NodeIdx outId = getOut (n);
     uint8_t c = getChar (n);
     
     uint8_t terminal = isTerminal (n) ? 'T' : ' ';

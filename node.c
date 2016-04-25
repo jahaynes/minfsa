@@ -21,14 +21,16 @@ void setChar (Node* node, const uint8_t c) {
     *node |= (unsigned long)c;
 }
 
-const unsigned long getOut (const Node* node) {
+const NodeIdx getOut (const Node* node) {
     return (*node & OUT_BITS) >> 8;
 }
 
-void setOut (Node* node, const unsigned long out) {
+void setOut (Node* node, const NodeIdx out) {
 
     //Check for overflow
-    unsigned long storedOut = (out << 8) & OUT_BITS;
+    Node storedOut = out;
+    storedOut <<= 8;
+    storedOut &= OUT_BITS;
     if (storedOut >> 8 != out) {
         printf("Overflow trying to store 'out' %lu in 24 bits!\n", out);
         exit(1);
@@ -37,14 +39,16 @@ void setOut (Node* node, const unsigned long out) {
     *node |= storedOut;
 }
 
-const unsigned long getSibling (const Node* node) {
+const NodeIdx getSibling (const Node* node) {
     return (*node & SIBLING_BITS) >> 32;
 }
 
-void setSibling (Node* node, const unsigned long sibling) {
+void setSibling (Node* node, const NodeIdx sibling) {
 
     //Check for overflow
-    unsigned long storedSibling = (sibling << 32) & SIBLING_BITS;
+    Node storedSibling = sibling;
+    storedSibling <<= 32;
+    storedSibling &= SIBLING_BITS;
     if (storedSibling >> 32 != sibling) {
         printf("Overflow trying to store 'sibling' %lu in 24 bits!\n", sibling);
         exit(1);
