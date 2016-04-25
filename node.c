@@ -1,6 +1,7 @@
 #include "node.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 /********
  *M .  .*   
@@ -24,9 +25,16 @@ const unsigned long getOut (const Node* node) {
     return (*node & OUT_BITS) >> 8;
 }
 
-void setOut (Node* node, const unsigned long out) {  
+void setOut (Node* node, const unsigned long out) {
+
+    //Check for overflow
+    unsigned long storedOut = (out << 8) & OUT_BITS;
+    if (storedOut >> 8 != out) {
+        printf("Overflow trying to store 'out' %lu in 24 bits!\n", out);
+        exit(1);
+    }
     *node &= (SIXTY_FOUR_BITS - OUT_BITS);
-    *node |= ((out << 8) & OUT_BITS);
+    *node |= storedOut;
 }
 
 const unsigned long getSibling (const Node* node) {
@@ -34,8 +42,16 @@ const unsigned long getSibling (const Node* node) {
 }
 
 void setSibling (Node* node, const unsigned long sibling) {
+
+    //Check for overflow
+    unsigned long storedSibling = (sibling << 32) & SIBLING_BITS;
+    if (storedSibling >> 32 != sibling) {
+        printf("Overflow trying to store 'sibling' %lu in 24 bits!\n", out);
+        exit(1);
+    }
+
     *node &= (SIXTY_FOUR_BITS - SIBLING_BITS);
-    *node |= ((sibling << 32) & SIBLING_BITS);
+    *node |= storedSibling;
 }
 
 bool isTerminal(const Node* node) {
