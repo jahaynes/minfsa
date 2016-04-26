@@ -4,73 +4,52 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-/********
- *M .  .*   
- * .  . *   24 Bits (Sibling bits)
- *.  .  *
- * S.  .*   24 Bits (Out bits)
- * . O. *   
- *.  . C*   8 Bits  (Char bits)
- *******/
+
+Node makeEmptyNode (void) {
+   Node n;
+   n.out = 0;
+   n.sibling = 0;
+   n.byte = 0;
+   n.meta = 0;
+   return n;
+}
 
 const uint8_t getChar (const Node* node) {
-    return (uint8_t) (*node & CHAR_BITS);
+    return node->byte;
 }
 
 void setChar (Node* node, const uint8_t c) {
-    *node &= (SIXTY_FOUR_BITS - CHAR_BITS);
-    *node |= (unsigned long)c;
+    node->byte = c;
 }
 
 const NodeIdx getOut (const Node* node) {
-    return (*node & OUT_BITS) >> 8;
+    return node->out;
 }
 
 void setOut (Node* node, const NodeIdx out) {
-
-    //Check for overflow
-    Node storedOut = out;
-    storedOut <<= 8;
-    storedOut &= OUT_BITS;
-    if (storedOut >> 8 != out) {
-        printf("Overflow trying to store 'out' %"PRIu64" in 24 bits!\n", out);
-        exit(1);
-    }
-    *node &= (SIXTY_FOUR_BITS - OUT_BITS);
-    *node |= storedOut;
+    node->out = out;
 }
 
 const NodeIdx getSibling (const Node* node) {
-    return (*node & SIBLING_BITS) >> 32;
+    return node->sibling;
 }
 
 void setSibling (Node* node, const NodeIdx sibling) {
-
-    //Check for overflow
-    Node storedSibling = sibling;
-    storedSibling <<= 32;
-    storedSibling &= SIBLING_BITS;
-    if (storedSibling >> 32 != sibling) {
-        printf("Overflow trying to store 'sibling' %"PRIu64" in 24 bits!\n", sibling);
-        exit(1);
-    }
-
-    *node &= (SIXTY_FOUR_BITS - SIBLING_BITS);
-    *node |= storedSibling;
+    node->sibling = sibling;
 }
 
-bool isTerminal(const Node* node) {
-    return *node & TERMINAL_BIT;
+const bool isTerminal(const Node* node) {
+    return node->meta & TERMINAL_BIT;
 }
 
 void setTerminal(Node* node) {
-    *node |= TERMINAL_BIT;
+    node->meta |= TERMINAL_BIT;
 }
 
-bool isConfluence(const Node* node) {
-    return *node & CONFLUENCE_BIT;
+const bool isConfluence(const Node* node) {
+    return node->meta & CONFLUENCE_BIT;
 }
 
 void setConfluence(Node* node) {
-    *node |= CONFLUENCE_BIT;
+    node->meta |= CONFLUENCE_BIT;
 }

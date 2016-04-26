@@ -26,7 +26,7 @@ NewNodeResult newNode (NodeIdx *newNodeId, struct Automaton *a) {
     NodeIdx nextId = a->nextFree;
     if (nextId < a->maxNodes) {
         a->nextFree++;
-        a->nodes[nextId] = 0;
+        a->nodes[nextId] = makeEmptyNode();
         *newNodeId = nextId;
         return NODE_ADDED;
     } else {
@@ -184,7 +184,7 @@ void dumpStructure (const struct Automaton *a) {
     int i;
     for(i=0;i<a->maxNodes;i++) {
         Node n = a->nodes[i];
-        if (n) {
+        if (n.byte) {
             dumpNode (i, &n);
         }
     }
