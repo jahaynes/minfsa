@@ -13,6 +13,20 @@
  *.  . C*   8 Bits  (Char bits)
  *******/
 
+/* Node: Data-type */
+//typedef uint64_t Node;
+
+/* 32 bit might be better here,
+ * but we need to use these as pointers */
+typedef uint64_t NodeIdx;
+
+typedef struct Node_t {
+    NodeIdx out;
+    NodeIdx sibling;   
+    uint8_t byte;
+    uint8_t meta;
+} Node;
+
 /* Bit definitions */
 #define LO_EIGHT_BITS ((UINT64_C(1) << 8) - UINT64_C(1))
 #define LO_THIRTYTWO_BITS ((UINT64_C(1) << 32) - UINT64_C(1))
@@ -26,12 +40,7 @@
 #define TERMINAL_BIT (UINT64_C(1) << 63)
 #define CONFLUENCE_BIT (UINT64_C(1) << 62)
 
-/* Node: Data-type */
-typedef uint64_t Node;
 
-/* 32 bit might be better here,
- * but we need to use these as pointers */
-typedef uint64_t NodeIdx;
 
 /* Node: Getters and Setters */
 
