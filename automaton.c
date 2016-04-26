@@ -22,12 +22,12 @@ struct Automaton* newAutomaton (void) {
     return new;
 }
 
-NewNodeResult newNode (Node *newNode, struct Automaton *a) {
+NewNodeResult newNode (NodeIdx *newNodeId, struct Automaton *a) {
     NodeIdx nextId = a->nextFree;
     if (nextId < a->maxNodes) {
         a->nextFree++;
         a->nodes[nextId] = 0;
-        *newNode = nextId;
+        *newNodeId = nextId;
         return NODE_ADDED;
     } else {
         return NEWNODE_FAIL;

@@ -16,7 +16,7 @@ typedef enum { NEWNODE_FAIL, NODE_ADDED } NewNodeResult;
 
 struct Automaton* newAutomaton (void);
 
-NewNodeResult newNode (Node *newNode, struct Automaton *a);
+NewNodeResult newNode (NodeIdx *newNodeId, struct Automaton *a);
 
 Node* getNode (const struct Automaton *a, const NodeIdx nodeId);
 
