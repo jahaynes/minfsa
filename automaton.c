@@ -39,7 +39,6 @@ Node* getNode (const struct Automaton *a, const NodeIdx nodeId) {
 
 AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
 
-    int ro = 1;
     int ci = 0;
     uint8_t c = str[ci++];
     Node *node = getNode (a, a->originId);
@@ -57,7 +56,6 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
         // If our outNode is blank
         // We can just create a new one here
         if ( getOut (node) == 0 ) {
-            ro = 0;
             // However if we made a new one here
             // and it was terminal, we must also
             // make it confluence? Unsure if necessary
@@ -88,7 +86,6 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
             continue;
         }
         
-        ro = 0;
         // Otherwise we gotta make a sibling now
         if ( newNode (&siblingId, a) == NEWNODE_FAIL ) {
             return ADD_FAIL;
@@ -114,7 +111,7 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
     }
 
 
-    if (ro) {
+    if ( isTerminal(node) ) {
         return NOT_ADDED;
     }
 
