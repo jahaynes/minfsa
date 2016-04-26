@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
 /********
  *M .  .*   
@@ -32,7 +33,7 @@ void setOut (Node* node, const NodeIdx out) {
     storedOut <<= 8;
     storedOut &= OUT_BITS;
     if (storedOut >> 8 != out) {
-        printf("Overflow trying to store 'out' %lu in 24 bits!\n", out);
+        printf("Overflow trying to store 'out' %"PRIu64" in 24 bits!\n", out);
         exit(1);
     }
     *node &= (SIXTY_FOUR_BITS - OUT_BITS);
@@ -50,7 +51,7 @@ void setSibling (Node* node, const NodeIdx sibling) {
     storedSibling <<= 32;
     storedSibling &= SIBLING_BITS;
     if (storedSibling >> 32 != sibling) {
-        printf("Overflow trying to store 'sibling' %lu in 24 bits!\n", sibling);
+        printf("Overflow trying to store 'sibling' %"PRIu64" in 24 bits!\n", sibling);
         exit(1);
     }
 
