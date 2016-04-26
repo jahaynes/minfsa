@@ -177,7 +177,7 @@ void dumpNode (int nodeId, Node *n) {
     uint8_t terminal = isTerminal (n) ? 'T' : ' ';
     uint8_t confluence = isConfluence (n) ? 'C' : ' ';
     
-    printf("%d: [ %c%c | S %"PRIu64" | O %"PRIu64" | %c ]\n", nodeId, terminal, confluence, siblingId, outId, c);
+    printf("%d: [ %c%c | S %"PRIu32" | O %"PRIu32" | %c ]\n", nodeId, terminal, confluence, siblingId, outId, c);
 }
 
 void dumpStructure (const struct Automaton *a) {

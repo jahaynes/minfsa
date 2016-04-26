@@ -7,7 +7,7 @@
 
 /* 32 bit might be better here,
  * but we need to use these as pointers */
-typedef uint64_t NodeIdx;
+typedef uint32_t NodeIdx;
 
 typedef struct Node_t {
     NodeIdx out;
