@@ -40,6 +40,11 @@ Node* getNode (const struct Automaton *a, const NodeIdx nodeId) {
 
 AddWordResult insertWord (struct Automaton* a, const uint8_t* str) {
 
+    if (str == NULL || str[0] == 0) {
+        printf("Not adding empty string\n");
+	return ADD_FAIL;
+    }
+
     int ci = 0;
     uint8_t c = str[ci++];
     Node *node = getNode (a, a->originId);
