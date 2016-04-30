@@ -4,14 +4,18 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
+void sizeNodesTo(struct Automaton *a, const int newSize);
+
 struct Automaton* newAutomaton (void) {
 
-    NodeIdx maxNodes = 1024 * 1024;
+    //NodeIdx maxNodes = 10;
    
     struct Automaton *new = calloc (1, sizeof (struct Automaton));
-    new->nodes = calloc (maxNodes, sizeof (Node));
-    
-    new->maxNodes = maxNodes;
+
+    sizeNodesTo (new, 10);
+
+    //new->nodes = calloc (maxNodes, sizeof (Node)); 
+    //new->maxNodes = maxNodes;
     
     // Skip the first node (it's null)
     new->nextFree = 1;
@@ -22,6 +26,14 @@ struct Automaton* newAutomaton (void) {
     return new;
 }
 
+void sizeNodesTo (struct Automaton *a, const int newSize) {
+    a->nodes = a->nodes == NULL
+       ? calloc (newSize, sizeof (Node))
+       : realloc (a->nodes, newSize);
+
+    a ->maxNodes = newSize;
+}
+
 NewNodeResult newNode (NodeIdx *newNodeId, struct Automaton *a) {
     NodeIdx nextId = a->nextFree;
     if (nextId < a->maxNodes) {
@@ -30,7 +42,12 @@ NewNodeResult newNode (NodeIdx *newNodeId, struct Automaton *a) {
         *newNodeId = nextId;
         return NODE_ADDED;
     } else {
-        return NEWNODE_FAIL;
+        printf("Resizing...\n");
+
+	sizeNodesTo (a, 3 * a->maxNodes / 2);
+
+        return (newNode (newNodeId, a));
+        //return NEWNODE_FAIL;
     }
 }
 
