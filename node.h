@@ -18,8 +18,8 @@ typedef struct Node_t {
 
 
 
-#define TERMINAL_BIT (UINT64_C(1))
-#define CONFLUENCE_BIT (UINT64_C(1) << 1)
+#define TERMINAL_BIT (UINT8_C(1))
+#define CONFLUENCE_BIT (UINT8_C(1) << 1)
 
 Node makeEmptyNode(void);
 
