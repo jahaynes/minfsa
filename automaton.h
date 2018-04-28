@@ -24,8 +24,6 @@ AddWordResult insertWord (struct Automaton* a, const uint8_t* str);
 
 void deleteAutomaton(struct Automaton *a);
 
-/* Debug/printing methods */
-
 void dumpValues (const struct Automaton* a);
 
 void dumpStructure (const struct Automaton *a);

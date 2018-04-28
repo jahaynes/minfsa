@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-
 Node makeEmptyNode (void) {
    Node n;
    n.out = 0;
@@ -26,7 +25,7 @@ const NodeIdx getOut (const Node* node) {
     return node->out;
 }
 
-void setOut (Node* node, const NodeIdx out) {
+void setOut(Node* node, const NodeIdx out) {
     node->out = out;
 }
 
@@ -34,9 +33,11 @@ const NodeIdx getSibling (const Node* node) {
     return node->sibling;
 }
 
-void setSibling (Node* node, const NodeIdx sibling) {
+void setSibling(Node* node, const NodeIdx sibling) {
     node->sibling = sibling;
 }
+
+#define TERMINAL_BIT (UINT8_C(1))
 
 const bool isTerminal(const Node* node) {
     return node->meta & TERMINAL_BIT;
@@ -44,12 +45,4 @@ const bool isTerminal(const Node* node) {
 
 void setTerminal(Node* node) {
     node->meta |= TERMINAL_BIT;
-}
-
-const bool isConfluence(const Node* node) {
-    return node->meta & CONFLUENCE_BIT;
-}
-
-void setConfluence(Node* node) {
-    node->meta |= CONFLUENCE_BIT;
 }
